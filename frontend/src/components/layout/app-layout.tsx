@@ -4,7 +4,7 @@ import Navbar from "./navbar";
 import { useState } from "react";
 
 export default function AppLayout() {
-  const totalIssuesCount = 8;
+  const totalIssuesCount = 20;
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   return (

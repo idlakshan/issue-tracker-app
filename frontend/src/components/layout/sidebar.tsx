@@ -9,7 +9,7 @@ interface SidebarProps {
 }
 
 export default function Sidebar({
-  totalIssuesCount = 5,
+  totalIssuesCount = 0,
   onClose,
 }: SidebarProps) {
   return (
