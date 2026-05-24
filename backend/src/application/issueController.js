@@ -76,3 +76,36 @@ export const getIssues = async (req, res) => {
     res.status(500).json({ message: "Error fetching issues", error: error.message });
   }
 };
+
+export const getIssueStats = async (req, res) => {
+  try {
+    const stats = await Issue.aggregate([
+      {
+        $group: {
+          _id: "$status",
+          count: { $sum: 1 }
+        }
+      }
+    ]);
+
+    const result = {
+      total: 0,
+      open: 0,
+      inProgress: 0,
+      resolved: 0,
+      closed: 0
+    };
+
+    stats.forEach(item => {
+      result.total += item.count;
+      if (item._id === 'Open') result.open = item.count;
+      if (item._id === 'In Progress') result.inProgress = item.count;
+      if (item._id === 'Resolved') result.resolved = item.count;
+      if (item._id === 'Closed') result.closed = item.count;
+    });
+
+    res.json(result);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch stats" });
+  }
+};

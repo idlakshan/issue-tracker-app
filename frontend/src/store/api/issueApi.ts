@@ -18,6 +18,14 @@ export interface GetIssuesParams {
   search?: string;
 }
 
+interface IssueStats {
+  open: number;
+  inProgress: number;
+  resolved: number;
+  closed: number;
+  total: number;
+}
+
 export const issueApi = createApi({
   reducerPath: "issueApi",
   baseQuery: baseQueryWithReauth,
@@ -41,7 +49,13 @@ export const issueApi = createApi({
         };
       },
     }),
+    getIssueStats: builder.query<IssueStats, void>({
+      query: () => ({
+        url: "/issues/stats",
+        method: "GET",
+      }),
+    }),
   }),
 });
 
-export const { useGetIssuesQuery } = issueApi;
+export const { useGetIssuesQuery, useGetIssueStatsQuery } = issueApi;
