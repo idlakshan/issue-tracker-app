@@ -104,7 +104,7 @@ export default function Dashboard() {
           </div>
         </div>
 
-        <div className="bg-(--color-surface) border border-secondary-text/10 rounded-xl p-5 shadow-xs flex flex-col justify-center items-center text-gray-400 text-sm border-dashed min-h-[250px]">
+        <div className="bg-(--color-surface) border border-secondary-text/10 rounded-xl p-5 shadow-xs flex flex-col justify-center items-center text-gray-400 text-sm border-dashed min-h-62.5">
           <ActivityTimeline />
         </div>
       </div>

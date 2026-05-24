@@ -3,8 +3,9 @@ import "./App.css";
 import Register from "./pages/register";
 import Login from "./pages/login";
 import AppLayout from "./components/layout/app-layout";
-import Dashboard from "./pages/Dashboard";
+import Dashboard from "./pages/dashboard";
 import AllIssues from "./pages/all-issues";
+
 
 function App() {
   return (
