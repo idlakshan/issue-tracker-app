@@ -4,6 +4,9 @@ import Button from "../components/ui/button";
 import Input from "../components/ui/input";
 import { useNavigate } from "react-router-dom";
 import { z } from "zod";
+import { useDispatch } from "react-redux";
+import { useLoginUserMutation } from "../store/api/authApi";
+import { setCredentials } from "../store/slices/authSlice";
 
 const loginSchema = z.object({
   email: z.string().email("Enter a valid email address"),
@@ -22,6 +25,9 @@ interface LogInErrors {
 
 export default function Login() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const [loginUser, { isLoading }] = useLoginUserMutation();
 
   const [form, setForm] = useState<LogInData>({
     email: "",
@@ -38,7 +44,7 @@ export default function Login() {
       }));
     };
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const result = loginSchema.safeParse(form);
@@ -54,6 +60,19 @@ export default function Login() {
     }
 
     setErrors({});
+
+    try {
+      const response = await loginUser({
+        email: form.email,
+        password: form.password,
+      }).unwrap();
+
+      dispatch(setCredentials(response));
+
+      navigate("/dashboard");
+    } catch (err: unknown) {
+      console.error("Login failed:", err);
+    }
 
     console.log("Validated Login Data:", result.data);
   };
@@ -125,7 +144,7 @@ export default function Login() {
           </div>
 
           <Button type="submit" className="w-full mb-4">
-            Sign in
+            {isLoading ? "Signing in..." : "Sign in"}
           </Button>
 
           <p className="text-center text-sm text-secondary-text">

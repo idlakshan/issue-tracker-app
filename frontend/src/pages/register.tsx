@@ -7,7 +7,9 @@ import { z } from "zod";
 import { getPasswordStrength } from "../utils/passwordStrength";
 import PasswordHint from "../components/password-hint";
 import { useNavigate } from "react-router-dom";
-
+import { useDispatch } from "react-redux";
+import { useRegisterUserMutation } from "../store/api/authApi";
+import { setCredentials } from "../store/slices/authSlice";
 
 const registerSchema = z.object({
   firstName: z.string().min(2, "Enter at least 2 characters"),
@@ -32,6 +34,9 @@ interface FormErrors {
 
 export default function Register() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const [registerUser, { isLoading }] = useRegisterUserMutation();
 
   const [form, setForm] = useState<FormData>({
     firstName: "",
@@ -52,7 +57,7 @@ export default function Register() {
       }));
     };
 
-  const handleRegister = (e: React.FormEvent) => {
+  const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const result = registerSchema.safeParse(form);
@@ -81,7 +86,22 @@ export default function Register() {
     setErrors({});
     console.log("Validated Data:", result.data);
 
-    setForm({ firstName: "", lastName: "", email: "", password: "" });
+    try {
+      const serverResponse = await registerUser({
+        firstName: form.firstName,
+        lastName: form.lastName,
+        email: form.email,
+        password: form.password,
+      }).unwrap();
+
+      dispatch(setCredentials(serverResponse));
+
+      navigate("/dashboard");
+
+      setForm({ firstName: "", lastName: "", email: "", password: "" });
+    } catch (err: unknown) {
+      console.error("Registration failed:", err);
+    }
   };
 
   return (
@@ -205,7 +225,7 @@ export default function Register() {
               className="text-primary cursor-pointer font-medium hover:underline"
               onClick={() => navigate("/")}
             >
-              Sign in
+              {isLoading ? "Creating Account..." : "Register"}
             </span>
           </p>
         </form>
