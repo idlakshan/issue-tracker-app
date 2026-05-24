@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import connectDB from './src/infrastructure/db.js';
 import authRoutes from './src/infrastructure/authRoutes.js';
 import issueRoutes from './src/infrastructure/issueRoutes.js';
+import ActivityRoutes from './src/infrastructure/activityRoutes.js';
 
 
 dotenv.config();
@@ -16,6 +17,7 @@ connectDB();
 
 app.use("/api/auth", authRoutes);
 app.use("/api/issues", issueRoutes);
+app.use("/api/activities", ActivityRoutes);
 
 app.get('/api/test', (req, res) => {
   res.json({ message: "API Works!" });
