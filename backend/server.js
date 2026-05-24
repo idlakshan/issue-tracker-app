@@ -12,7 +12,7 @@ dotenv.config();
 const app = express();
 
 const allowedOrigins = [
-  process.env.VITE_BASE_URL, 
+  process.env.FRONTEND_URL, 
   "http://localhost:5173"
 ];
 
