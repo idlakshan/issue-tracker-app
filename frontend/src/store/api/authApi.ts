@@ -41,18 +41,11 @@ export interface UserResponse {
   initials: string;
 }
 
-// export interface IssueResponse {
-//   _id: string;
-//   title: string;
-//   priority: string;
-//   status: string;
-//   assignees: UserResponse[];
-// }
-
 
 export const authApi = createApi({
   reducerPath: "authApi",
   baseQuery: baseQueryWithReauth,
+  tagTypes: ["Users"],
   endpoints: (builder) => ({
     registerUser: builder.mutation<AuthResponse, RegisterRequest>({
       query: (userData) => ({
@@ -60,6 +53,7 @@ export const authApi = createApi({
         method: "POST",
         body: userData,
       }),
+      invalidatesTags: ["Users"],
     }),
 
     loginUser: builder.mutation<AuthResponse, LoginRequest>({
@@ -78,6 +72,7 @@ export const authApi = createApi({
     }),
     getUsers: builder.query<UserResponse[], void>({
       query: () => "/auth/users",
+      providesTags: ["Users"],
     }),
   }),
 });
