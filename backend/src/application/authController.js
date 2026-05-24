@@ -140,3 +140,12 @@ export const logout = async (req, res) => {
     return res.status(500).json({ message: "Logout failed", error: error.message });
   }
 };
+
+export const getAllUsers = async (req, res) => {
+  try {
+    const users = await User.find().select("firstName lastName initials");
+    res.json(users);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch users" });
+  }
+};

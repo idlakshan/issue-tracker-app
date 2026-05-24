@@ -1,6 +1,7 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { baseQueryWithReauth } from "./baseQuery";
 
+
 interface AuthResponse {
   accessToken: string;
   refreshToken: string;
@@ -32,6 +33,23 @@ interface LogoutResponse {
   message: string;
 }
 
+
+export interface UserResponse {
+  _id: string;
+  firstName: string;
+  lastName: string;
+  initials: string;
+}
+
+// export interface IssueResponse {
+//   _id: string;
+//   title: string;
+//   priority: string;
+//   status: string;
+//   assignees: UserResponse[];
+// }
+
+
 export const authApi = createApi({
   reducerPath: "authApi",
   baseQuery: baseQueryWithReauth,
@@ -43,14 +61,14 @@ export const authApi = createApi({
         body: userData,
       }),
     }),
-    
+
     loginUser: builder.mutation<AuthResponse, LoginRequest>({
       query: (credentials) => ({
         url: "/auth/login",
         method: "POST",
         body: credentials,
       }),
-    }), 
+    }),
     logoutUser: builder.mutation<LogoutResponse, LogoutRequest>({
       query: (body) => ({
         url: "/auth/logout",
@@ -58,11 +76,15 @@ export const authApi = createApi({
         body,
       }),
     }),
+    getUsers: builder.query<UserResponse[], void>({
+      query: () => "/auth/users",
+    }),
   }),
 });
 
-export const { 
-  useRegisterUserMutation, 
-  useLoginUserMutation, 
-  useLogoutUserMutation 
+export const {
+  useRegisterUserMutation,
+  useLoginUserMutation,
+  useLogoutUserMutation,
+  useGetUsersQuery
 } = authApi;

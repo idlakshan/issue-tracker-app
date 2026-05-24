@@ -7,9 +7,7 @@ export default function ActivityTimeline() {
 
   console.log("Fetched activities:", activities);
 
-  const latestActivities = activities
-    ? [...activities].slice(0, 5)
-    : [];
+  const latestActivities = activities ? [...activities].slice(0, 5) : [];
 
   const activityConfig = {
     CREATE: {

@@ -1,8 +1,4 @@
-interface UserDummy {
-  id: string;
-  name: string;
-  initials: string;
-}
+import { useGetUsersQuery } from "../../store/api/authApi";
 
 interface AvatarStackProps {
   maxVisible?: number;
@@ -16,20 +12,14 @@ const AVATAR_COLORS = [
   { bg: "bg-orange-500", text: "text-white" },
 ];
 
-
-const dummyTeam: UserDummy[] = [
-  { id: "1", name: "Anura Silva", initials: "AS" },
-  { id: "2", name: "Janith Liyanage", initials: "JL" },
-  { id: "3", name: "Malki Perera", initials: "MK" },
-  { id: "4", name: "Suresh Ranasinghe", initials: "SR" },
-  { id: "5", name: "Chaminda Perera", initials: "CP" },
-  { id: "6", name: "Nuwan Thilina", initials: "NT" },
-  { id: "7", name: "Kasun Kalhara", initials: "KK" },
-];
-
 export default function AvatarStack({ maxVisible = 5 }: AvatarStackProps) {
-  const visibleUsers = dummyTeam.slice(0, maxVisible);
-  const extraCount = dummyTeam.length - maxVisible;
+  const { data: users, isLoading } = useGetUsersQuery();
+
+  if (isLoading) return <div className="text-sm text-gray-400">Loading team...</div>;
+
+  // Optional chaining (?.) සහ නියමිත logic එක
+  const visibleUsers = users?.slice(0, maxVisible) || [];
+  const extraCount = (users?.length || 0) > maxVisible ? (users?.length || 0) - maxVisible : 0;
 
   return (
     <div className="flex items-center gap-2">
@@ -39,8 +29,8 @@ export default function AvatarStack({ maxVisible = 5 }: AvatarStackProps) {
           const color = AVATAR_COLORS[index % AVATAR_COLORS.length];
           return (
             <div
-              key={user.id}
-              title={user.name}
+              key={user._id}
+              title={`${user.firstName} ${user.lastName}`}
               className={`w-7 h-7 rounded-full ${color.bg} ${color.text} flex items-center justify-center text-[10px] font-bold ring-2 ring-(--color-surface) shrink-0 transition-transform hover:scale-110 hover:z-10 cursor-pointer`}
             >
               {user.initials}

@@ -2,9 +2,13 @@ import { Outlet } from "react-router-dom";
 import Sidebar from "./sidebar";
 import Navbar from "./navbar";
 import { useState } from "react";
+import { useGetIssueStatsQuery } from "../../store/api/issueApi";
 
 export default function AppLayout() {
-  const totalIssuesCount = 20;
+
+  const { data: stats } = useGetIssueStatsQuery();
+  
+  const totalIssuesCount = stats?.total ?? 0;
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   return (

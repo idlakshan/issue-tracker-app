@@ -6,21 +6,23 @@ import { useGetIssuesQuery } from "../store/api/issueApi";
 import type { Issue } from "../types/issue";
 import Input from "../components/ui/text-input";
 import Pagination from "../components/ui/pagination";
+import { useGetUsersQuery } from "../store/api/authApi";
 
-export interface UserResponse {
-  _id: string;
-  firstName: string;
-  lastName: string;
-  initials: string;
-}
+const statusOptions = [
+  { value: "ALL", label: "All Statuses" },
+  { value: "Open", label: "Open" },
+  { value: "In Progress", label: "In Progress" },
+  { value: "Resolved", label: "Resolved" },
+  { value: "Closed", label: "Closed" },
+];
 
-export interface IssueResponse {
-  _id: string;
-  title: string;
-  priority: string;
-  status: string;
-  assignees: UserResponse[];
-}
+const priorityOptions = [
+  { value: "ALL", label: "All Priorities" },
+  { value: "Low", label: "Low" },
+  { value: "Medium", label: "Medium" },
+  { value: "High", label: "High" },
+  { value: "Critical", label: "Critical" },
+];
 
 export default function AllIssues() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -38,6 +40,8 @@ export default function AllIssues() {
     }, 400);
     return () => clearTimeout(handler);
   }, [searchTerm]);
+
+  const { data: users } = useGetUsersQuery();
 
   const { data, isLoading, isFetching, error } = useGetIssuesQuery({
     page: currentPage,
@@ -66,45 +70,52 @@ export default function AllIssues() {
 
   return (
     <div className="h-full flex flex-col overflow-hidden">
-      <div className="mb-3">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <div className="md:col-span-1">
-            <Input
-              placeholder="Search issues..."
-              value={searchTerm}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setSearchTerm(e.target.value)
+      <div className="mb-3 flex items-center justify-between gap-4">
+        <div className="flex-1 max-w-xl">
+          <Input
+            placeholder="Search issues..."
+            value={searchTerm}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setSearchTerm(e.target.value)
+            }
+            icon={<Search size={16} />}
+            className="w-full"
+          />
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="w-36">
+            <Dropdown
+              options={statusOptions}
+              value={statusFilter}
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                setStatusFilter(e.target.value)
               }
-              icon={<Search size={16} />}
             />
           </div>
-          <Dropdown
-            options={[
-              { value: "ALL", label: "All Statuses" },
-              { value: "Open", label: "Open" },
-            ]}
-            value={statusFilter}
-            onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-              setStatusFilter(e.target.value)
-            }
-          />
-          <Dropdown
-            options={[
-              { value: "ALL", label: "All Priorities" },
-              { value: "High", label: "High" },
-            ]}
-            value={priorityFilter}
-            onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-              setPriorityFilter(e.target.value)
-            }
-          />
-          <Dropdown
-            options={[{ value: "ALL", label: "All Assignees" }]}
-            value={assigneeFilter}
-            onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-              setAssigneeFilter(e.target.value)
-            }
-          />
+          <div className="w-36">
+            <Dropdown
+              options={priorityOptions}
+              value={priorityFilter}
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                setPriorityFilter(e.target.value)
+              }
+            />
+          </div>
+          <div className="w-48">
+            <Dropdown
+              options={[
+                { value: "ALL", label: "All Assignees" },
+                ...(users?.map((u) => ({
+                  value: u._id,
+                  label: `${u.firstName} ${u.lastName}`,
+                })) || []),
+              ]}
+              value={assigneeFilter}
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                setAssigneeFilter(e.target.value)
+              }
+            />
+          </div>
         </div>
       </div>
 
