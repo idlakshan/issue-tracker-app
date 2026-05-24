@@ -31,7 +31,7 @@ export default function AllIssues() {
   const [priorityFilter, setPriorityFilter] = useState("ALL");
   const [assigneeFilter, setAssigneeFilter] = useState("ALL");
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 6;
+  const itemsPerPage = 5;
 
   useEffect(() => {
     const handler = setTimeout(() => {
@@ -68,9 +68,17 @@ export default function AllIssues() {
   const issuesList: TableIssue[] = data?.issues.map(mapToTableIssue) || [];
   const totalPages = data?.totalPages || 1;
 
+  const handleEdit = (id: string) => {
+    console.log("Edit issue:", id);
+  };
+
+  const handleDelete = (id: string) => {
+    console.log("Delete issue:", id);
+  };
+
   return (
     <div className="h-full flex flex-col overflow-hidden">
-      <div className="mb-3 flex items-center justify-between gap-4">
+      <div className="mb-3 mt-2 flex items-center justify-between gap-4">
         <div className="flex-1 max-w-xl">
           <Input
             placeholder="Search issues..."
@@ -119,7 +127,7 @@ export default function AllIssues() {
         </div>
       </div>
 
-      <div className="flex-1 bg-(--color-surface) rounded-xl border border-secondary-text/10 overflow-hidden flex flex-col">
+      <div className="flex-1 mt-2 bg-(--color-surface) rounded-xl border border-secondary-text/10 overflow-hidden flex flex-col">
         <div className="flex-1 overflow-y-auto p-4">
           {isLoading || isFetching ? (
             <div className="h-full flex items-center justify-center">
@@ -130,7 +138,12 @@ export default function AllIssues() {
               Error loading issues
             </div>
           ) : (
-            <IssueTable data={issuesList} />
+            <IssueTable
+              data={issuesList}
+              onEdit={handleEdit}
+              onDelete={handleDelete}
+              showColumns={{ actions: true }}
+            />
           )}
         </div>
 

@@ -1,3 +1,5 @@
+import { Edit2, Trash2 } from "lucide-react";
+
 export interface TableUser {
   id: string;
   name: string;
@@ -22,12 +24,17 @@ interface IssueTableProps {
     priority?: boolean;
     status?: boolean;
     assignees?: boolean;
+    actions?: boolean;
   };
+  onEdit?: (id: string) => void;
+  onDelete?: (id: string) => void;
 }
 
 export default function IssueTable({
   data,
   showColumns = {},
+  onEdit,
+  onDelete,
 }: IssueTableProps) {
   const columns = {
     id: showColumns.id ?? true,
@@ -36,6 +43,7 @@ export default function IssueTable({
     priority: showColumns.priority ?? true,
     status: showColumns.status ?? true,
     assignees: showColumns.assignees ?? true,
+    actions: showColumns.actions ?? false,
   };
 
   const statusStyles = {
@@ -65,6 +73,9 @@ export default function IssueTable({
             {columns.status && <th className="py-3 px-2">Status</th>}
             {columns.assignees && (
               <th className="py-3 px-2 text-center">Assignees</th>
+            )}
+            {columns.actions && (
+              <th className="py-3 px-2 text-center">Actions</th>
             )}
           </tr>
         </thead>
@@ -162,6 +173,29 @@ export default function IssueTable({
                       ) : (
                         <span className="text-xs text-gray-400">—</span>
                       )}
+
+                      {columns.actions && (
+                        <th className="py-3 px-2 text-center">Actions</th>
+                      )}
+                    </div>
+                  </td>
+                )}
+
+                {columns.actions && (
+                  <td className="py-3.5 px-2">
+                    <div className="flex items-center justify-center gap-2">
+                      <button
+                        onClick={() => onEdit?.(issue.id)}
+                        className="p-1.5 hover:bg-gray-100 rounded-md text-gray-400 hover:text-blue-600 transition cursor-pointer"
+                      >
+                        <Edit2 size={16} />
+                      </button>
+                      <button
+                        onClick={() => onDelete?.(issue.id)}
+                        className="p-1.5 hover:bg-gray-100 rounded-md text-gray-400 hover:text-red-600 transition cursor-pointer"
+                      >
+                        <Trash2 size={16} />
+                      </button>
                     </div>
                   </td>
                 )}
