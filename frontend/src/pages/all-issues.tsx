@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import { Search, Loader2 } from "lucide-react";
 import IssueTable, { type TableIssue } from "../components/ui/issue-table";
-import Input from "../components/ui/input";
 import { Dropdown } from "../components/ui/dropdown";
 import { useGetIssuesQuery } from "../store/api/issueApi";
 import type { Issue } from "../types/issue";
+import Input from "../components/ui/text-input";
 
 export interface UserResponse {
   _id: string;

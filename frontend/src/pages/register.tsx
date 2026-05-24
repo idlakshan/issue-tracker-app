@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { useRegisterUserMutation } from "../store/api/authApi";
 import { setCredentials } from "../store/slices/authSlice";
-import Input from "../components/ui/input";
+import Input from "../components/ui/text-input";
 
 const registerSchema = z.object({
   firstName: z.string().min(2, "Enter at least 2 characters"),

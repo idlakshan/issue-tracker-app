@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { ShieldHalf, Mail, Lock, Eye, EyeOff } from "lucide-react";
 import Button from "../components/ui/button";
-import Input from "../components/ui/input";
+import Input from "../components/ui/text-input";
 import { useNavigate } from "react-router-dom";
 import { z } from "zod";
 import { useDispatch } from "react-redux";
