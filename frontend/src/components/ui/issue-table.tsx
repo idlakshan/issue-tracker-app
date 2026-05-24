@@ -1,0 +1,159 @@
+export interface TableUser {
+  id: string;
+  name: string;
+  initials: string;
+}
+
+export interface TableIssue {
+  id: string;
+  title: string;
+  priority: "Critical" | "High" | "Medium" | "Low";
+  status: "Open" | "In Progress" | "Resolved" | "Closed";
+  assignees: TableUser[];
+}
+
+interface IssueTableProps {
+  data: TableIssue[];
+  showColumns?: {
+    id?: boolean;
+    title?: boolean;
+    priority?: boolean;
+    status?: boolean;
+    assignees?: boolean;
+  };
+}
+
+export default function IssueTable({
+  data,
+  showColumns = {},
+}: IssueTableProps) {
+  const columns = {
+    id: showColumns.id ?? true,
+    title: showColumns.title ?? true,
+    priority: showColumns.priority ?? true,
+    status: showColumns.status ?? true,
+    assignees: showColumns.assignees ?? true,
+  };
+
+  const statusStyles = {
+    Open: { text: "text-blue-600", bg: "bg-blue-500" },
+    "In Progress": { text: "text-amber-600", bg: "bg-amber-500" },
+    Resolved: { text: "text-emerald-600", bg: "bg-emerald-500" },
+    Closed: { text: "text-gray-500", bg: "bg-gray-500" },
+  };
+
+  const priorityStyles = {
+    Critical: "bg-red-50 text-red-600 border-red-100",
+    High: "bg-orange-50 text-orange-600 border-orange-100",
+    Medium: "bg-yellow-50 text-yellow-600 border-yellow-100",
+    Low: "bg-green-50 text-green-600 border-green-100",
+  };
+
+  return (
+    <div className="w-full overflow-x-auto">
+      <table className="w-full text-left border-collapse">
+        <thead>
+          <tr className="border-b border-gray-100 text-xs text-gray-400 font-medium">
+            {columns.id && <th className="py-3 px-2">ID</th>}
+            {columns.title && <th className="py-3 px-2">Title</th>}
+            {columns.priority && <th className="py-3 px-2">Priority</th>}
+            {columns.status && <th className="py-3 px-2">Status</th>}
+            {columns.assignees && (
+              <th className="py-3 px-2 text-center">Assignees</th>
+            )}
+          </tr>
+        </thead>
+        <tbody className="divide-y divide-gray-50 text-sm">
+          {data.length === 0 ? (
+            <tr>
+              <td
+                colSpan={5}
+                className="py-6 text-center text-gray-400 text-xs"
+              >
+                No issues found.
+              </td>
+            </tr>
+          ) : (
+            data.map((issue) => (
+              <tr
+                key={issue.id}
+                className="hover:bg-gray-50/50 transition-colors"
+              >
+                {columns.id && (
+                  <td className="py-3.5 px-2 font-medium text-gray-500 text-xs">
+                    {issue.id}
+                  </td>
+                )}
+
+                {columns.title && (
+                  <td
+                    className="py-3.5 px-2 font-medium text-(--color-text) max-w-60 truncate"
+                    title={issue.title}
+                  >
+                    {issue.title}
+                  </td>
+                )}
+
+                {columns.priority && (
+                  <td className="py-3.5 px-2">
+                    <span
+                      className={`px-2 py-0.5 text-[11px] font-semibold rounded-full border ${priorityStyles[issue.priority]}`}
+                    >
+                      {issue.priority}
+                    </span>
+                  </td>
+                )}
+
+                {columns.status && (
+                  <td className="py-3.5 px-2">
+                    <span
+                      className={`text-xs font-medium flex items-center gap-1.5 ${statusStyles[issue.status].text}`}
+                    >
+                      <span
+                        className={`w-1.5 h-1.5 rounded-full ${statusStyles[issue.status].bg}`}
+                      />
+                      {issue.status}
+                    </span>
+                  </td>
+                )}
+
+                {columns.assignees && (
+                  <td className="py-3.5 px-2">
+                    <div className="flex items-center justify-center -space-x-2">
+                      {issue.assignees.length > 0 ? (
+                        <>
+                          {issue.assignees.slice(0, 3).map((user, idx) => (
+                            <div
+                              key={user.id}
+                              title={user.name}
+                              className={`w-6 h-6 rounded-full flex items-center justify-center text-[9px] font-bold ring-2 ring-(--color-surface) text-white ${
+                                idx === 0
+                                  ? "bg-blue-600"
+                                  : idx === 1
+                                    ? "bg-purple-600"
+                                    : "bg-emerald-600"
+                              }`}
+                            >
+                              {user.initials}
+                            </div>
+                          ))}
+                          {issue.assignees.length > 3 && (
+                            <div className="w-6 h-6 rounded-full bg-gray-100 text-gray-500 flex items-center justify-center text-[9px] font-bold ring-2 ring-(--color-surface)">
+                              +{issue.assignees.length - 3}
+                            </div>
+                          )}
+                        </>
+                      ) : (
+                        <span className="text-xs text-gray-400">—</span>
+                      )}
+                    </div>
+                  </td>
+                )}
+              </tr>
+            ))
+          )}
+        </tbody>
+      </table>
+    </div>
+  );
+}
