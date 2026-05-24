@@ -8,6 +8,7 @@ interface AuthResponse {
     id: string;
     name: string;
     initials: string;
+    email: string;
   };
 }
 
@@ -23,6 +24,13 @@ interface RegisterRequest {
   password: string;
 }
 
+interface LogoutRequest {
+  refreshToken: string;
+}
+
+interface LogoutResponse {
+  message: string;
+}
 
 export const authApi = createApi({
   reducerPath: "authApi",
@@ -35,15 +43,26 @@ export const authApi = createApi({
         body: userData,
       }),
     }),
+    
     loginUser: builder.mutation<AuthResponse, LoginRequest>({
       query: (credentials) => ({
         url: "/auth/login",
         method: "POST",
         body: credentials,
       }),
+    }), 
+    logoutUser: builder.mutation<LogoutResponse, LogoutRequest>({
+      query: (body) => ({
+        url: "/auth/logout",
+        method: "POST",
+        body,
+      }),
     }),
   }),
 });
 
-
-export const { useRegisterUserMutation, useLoginUserMutation } = authApi;
+export const { 
+  useRegisterUserMutation, 
+  useLoginUserMutation, 
+  useLogoutUserMutation 
+} = authApi;

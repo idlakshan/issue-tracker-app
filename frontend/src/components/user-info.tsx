@@ -1,35 +1,29 @@
 import { LogOut } from "lucide-react";
+import { useSelector } from "react-redux";
+import type { RootState } from "../store/store";
 
 interface UserInfoProps {
-  user?: {
-    firstName: string;
-    lastName: string;
-    email: string;
-    initials: string;
-  };
   onLogout?: () => void;
 }
 
-export default function UserInfo({ user, onLogout }: UserInfoProps) {
-  const currentUser = user || {
-    firstName: "Dimuthu",
-    lastName: "Lakshan",
-    email: "dimuthu@gmail.com",
-    initials: "DL",
-  };
+export default function UserInfo({ onLogout }: UserInfoProps) {
+
+  const user = useSelector((state: RootState) => state.auth.user);
+
+  if (!user) return null;
 
   return (
     <div className="flex items-center justify-between">
       <div className="flex items-center gap-3 overflow-hidden">
         <div className="w-9 h-9 rounded-full bg-(--color-primary) text-(--color-surface) flex items-center justify-center text-sm font-semibold shrink-0">
-          {currentUser.initials}
+         {user.initials}
         </div>
         <div className="overflow-hidden">
           <p className="text-sm font-medium text-(--color-text) truncate">
-            {`${currentUser.firstName} ${currentUser.lastName}`}
+           {user.name}
           </p>
           <p className="text-xs text-secondary-text truncate">
-            {currentUser.email}
+           {user.email}
           </p>
         </div>
       </div>

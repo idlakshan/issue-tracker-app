@@ -2,6 +2,10 @@ import { LayoutDashboard, ListTodo, Users, ShieldHalf, X } from "lucide-react";
 import SidebarSection from "../sidebar-section";
 import SidebarItem from "../sidebar-item";
 import UserInfo from "../user-info";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { useLogoutUserMutation } from "../../store/api/authApi";
+import { logout } from "../../store/slices/authSlice";
 
 interface SidebarProps {
   totalIssuesCount?: number;
@@ -12,6 +16,26 @@ export default function Sidebar({
   totalIssuesCount = 0,
   onClose,
 }: SidebarProps) {
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [logoutUser] = useLogoutUserMutation();
+
+  const handleLogout = async () => {
+    try {
+      const refreshToken = localStorage.getItem("refreshToken");
+      
+      if (refreshToken) {
+        await logoutUser({ refreshToken }).unwrap();
+      }
+    } catch (error) {
+      console.error("Backend logout failed, forcing frontend logout:", error);
+    } finally {
+      dispatch(logout()); 
+      navigate("/login");
+    }
+  };
+
   return (
     <aside className="w-64 h-screen bg-(--color-surface) border-r border-secondary-text/10 flex flex-col justify-between shadow-xs relative">
       <div>
@@ -62,7 +86,7 @@ export default function Sidebar({
       </div>
 
       <div className="border-t border-secondary-text/10 p-4 bg-(--color-surface)">
-        <UserInfo onLogout={() => console.log("Logging out...")} />
+       <UserInfo onLogout={handleLogout} />
       </div>
     </aside>
   );

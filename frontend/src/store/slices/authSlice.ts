@@ -4,6 +4,7 @@ interface UserDto {
   id: string;
   name: string;
   initials: string;
+  email: string;
 }
 
 interface AuthState {

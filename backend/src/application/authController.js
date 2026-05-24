@@ -50,7 +50,7 @@ export const register = async (req, res) => {
     res.status(201).json({
       accessToken,
       refreshToken,
-      user: { id: newUser._id, name: `${firstName} ${lastName}`, initials },
+      user: { id: newUser._id, name: `${firstName} ${lastName}`, email: newUser.email, initials },
     });
   } catch (error) {
     res
@@ -86,6 +86,7 @@ export const login = async (req, res) => {
       user: {
         id: user._id,
         name: `${user.firstName} ${user.lastName}`,
+        email:user.email,
         initials: user.initials,
       },
     });
@@ -117,5 +118,25 @@ export const refresh = async (req, res) => {
     res.json({ accessToken: newAccessToken });
   } catch (error) {
     return res.status(403).json({ message: "Invalid refresh token" });
+  }
+};
+
+export const logout = async (req, res) => {
+  try {
+    const { refreshToken } = req.body;
+
+    if (!refreshToken) {
+      return res.status(400).json({ message: "Refresh Token is required" });
+    }
+
+    const user = await User.findOne({ refreshToken });
+
+    if (user) {
+      user.refreshToken = null;
+      await user.save();
+    }
+    return res.status(200).json({ message: "Logged out successfully" });
+  } catch (error) {
+    return res.status(500).json({ message: "Logout failed", error: error.message });
   }
 };
