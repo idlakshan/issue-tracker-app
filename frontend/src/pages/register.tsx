@@ -5,6 +5,7 @@ import Input from "../components/ui/Input";
 import PasswordStrengthBar from "../components/PasswordStrengthBar";
 import { z } from "zod";
 import { getPasswordStrength } from "../utils/passwordStrength";
+import PasswordHint from "../components/PasswordHint";
 
 const registerSchema = z.object({
   firstName: z.string().min(2, "Enter at least 2 characters"),
@@ -37,6 +38,7 @@ export default function Register() {
 
   const [errors, setErrors] = useState<FormErrors>({});
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [showHint, setShowHint] = useState(false);
 
   const handleChange =
     (field: keyof FormData) => (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -157,10 +159,14 @@ export default function Register() {
               Password
             </label>
 
-            <div className="relative">
+            <div
+              className="relative"
+              onMouseEnter={() => setShowHint(true)}
+              onMouseLeave={() => setShowHint(false)}
+            >
               <Input
                 type={showPassword ? "text" : "password"}
-                placeholder="Min 8 characters"
+                placeholder="Create a strong password"
                 value={form.password}
                 onChange={handleChange("password")}
                 className="w-full pr-10"
@@ -173,6 +179,7 @@ export default function Register() {
               >
                 {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
               </button>
+              <PasswordHint show={showHint} />
             </div>
 
             <PasswordStrengthBar password={form.password} />
