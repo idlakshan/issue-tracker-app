@@ -2,6 +2,8 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import connectDB from './src/infrastructure/db.js';
+import authRoutes from './src/infrastructure/authRoutes.js';
+
 
 dotenv.config();
 
@@ -10,6 +12,9 @@ app.use(cors());
 app.use(express.json());
 
 connectDB();
+
+app.use("/api/auth", authRoutes);
+
 
 app.get('/api/test', (req, res) => {
   res.json({ message: "API Works!" });
