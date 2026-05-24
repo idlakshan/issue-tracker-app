@@ -6,6 +6,7 @@ import PasswordStrengthBar from "../components/PasswordStrengthBar";
 import { z } from "zod";
 import { getPasswordStrength } from "../utils/passwordStrength";
 import PasswordHint from "../components/PasswordHint";
+import { useNavigate } from "react-router-dom";
 
 const registerSchema = z.object({
   firstName: z.string().min(2, "Enter at least 2 characters"),
@@ -29,6 +30,8 @@ interface FormErrors {
 }
 
 export default function Register() {
+  const navigate = useNavigate();
+
   const [form, setForm] = useState<FormData>({
     firstName: "",
     lastName: "",
@@ -199,7 +202,7 @@ export default function Register() {
             Already have an account?{" "}
             <span
               className="text-primary cursor-pointer font-medium hover:underline"
-              onClick={() => console.log("Navigate to login")}
+              onClick={() => navigate("/")}
             >
               Sign in
             </span>
