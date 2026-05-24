@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { ShieldHalf, Eye, EyeOff } from "lucide-react";
 import Button from "../components/ui/button";
-import Input from "../components/ui/input";
 import PasswordStrengthBar from "../components/password-strength-bar";
 import { z } from "zod";
 import { getPasswordStrength } from "../utils/passwordStrength";
@@ -10,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { useRegisterUserMutation } from "../store/api/authApi";
 import { setCredentials } from "../store/slices/authSlice";
+import Input from "../components/ui/input";
 
 const registerSchema = z.object({
   firstName: z.string().min(2, "Enter at least 2 characters"),

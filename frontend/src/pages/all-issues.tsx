@@ -71,7 +71,7 @@ export default function AllIssues() {
             <Input
               placeholder="Search issues..."
               value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchTerm(e.target.value)}
               icon={<Search size={16} />}
             />
           </div>
@@ -81,7 +81,7 @@ export default function AllIssues() {
               { value: "Open", label: "Open" },
             ]}
             value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setStatusFilter(e.target.value)}
           />
           <Dropdown
             options={[
@@ -89,12 +89,12 @@ export default function AllIssues() {
               { value: "High", label: "High" },
             ]}
             value={priorityFilter}
-            onChange={(e) => setPriorityFilter(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setPriorityFilter(e.target.value)}
           />
           <Dropdown
             options={[{ value: "ALL", label: "All Assignees" }]}
             value={assigneeFilter}
-            onChange={(e) => setAssigneeFilter(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setAssigneeFilter(e.target.value)}
           />
         </div>
       </div>
