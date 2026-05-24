@@ -5,7 +5,7 @@ import Login from "./pages/login";
 import AppLayout from "./components/layout/app-layout";
 import Dashboard from "./pages/dashboard";
 import AllIssues from "./pages/all-issues";
-
+import ProtectedLayout from "./components/layout/protected-layout";
 
 function App() {
   return (
@@ -14,9 +14,11 @@ function App() {
         <Route path="/" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
-        <Route element={<AppLayout />}>
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/issues" element={<AllIssues />} />
+        <Route element={<ProtectedLayout />}>
+          <Route element={<AppLayout />}>
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/issues" element={<AllIssues />} />
+          </Route>
         </Route>
 
         <Route path="*" element={<Navigate to="/" replace />} />

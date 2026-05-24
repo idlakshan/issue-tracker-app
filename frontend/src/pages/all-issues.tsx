@@ -7,6 +7,7 @@ import type { Issue } from "../types/issue";
 import Input from "../components/ui/text-input";
 import Pagination from "../components/ui/pagination";
 import { useGetUsersQuery } from "../store/api/authApi";
+import IssueModel from "../components/issue-modal";
 
 const statusOptions = [
   { value: "ALL", label: "All Statuses" },
@@ -32,6 +33,11 @@ export default function AllIssues() {
   const [assigneeFilter, setAssigneeFilter] = useState("ALL");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
+
+  const [selectedIssue, setSelectedIssue] = useState<Issue | undefined>(
+    undefined,
+  );
+  const [isIssueModalOpen, setIsIssueModalOpen] = useState(false);
 
   useEffect(() => {
     const handler = setTimeout(() => {
@@ -69,7 +75,12 @@ export default function AllIssues() {
   const totalPages = data?.totalPages || 1;
 
   const handleEdit = (id: string) => {
-    console.log("Edit issue:", id);
+    const issue = data?.issues.find((i) => i._id === id);
+    //console.log("Edit issue:", issue);
+    if (issue) {
+      setSelectedIssue(issue);
+      setIsIssueModalOpen(true);
+    }
   };
 
   const handleDelete = (id: string) => {
@@ -159,6 +170,15 @@ export default function AllIssues() {
           />
         </div>
       </div>
+      <IssueModel
+        key={isIssueModalOpen ? selectedIssue?._id || "new" : "closed"}
+        open={isIssueModalOpen}
+        onClose={() => {
+          setIsIssueModalOpen(false);
+          setSelectedIssue(undefined);
+        }}
+        issue={selectedIssue}
+      />
     </div>
   );
 }

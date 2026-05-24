@@ -19,11 +19,13 @@ export interface ActivityResponse {
 export const activityApi = createApi({
   reducerPath: "activityApi",
   baseQuery: baseQueryWithReauth, 
+  tagTypes: ["Activities"],
   endpoints: (builder) => ({
     getRecentActivities: builder.query<ActivityResponse[], void>({
       query: () => ({
         url: "/activities",
         method: "GET",
+        providesTags: ["Activities"],
       }),
     }),
   }),

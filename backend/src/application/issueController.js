@@ -109,3 +109,58 @@ export const getIssueStats = async (req, res) => {
     res.status(500).json({ error: "Failed to fetch stats" });
   }
 };
+
+export const updateIssue = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { title, description, priority, status, assignees } = req.body;
+    const userId = req.user.id;
+
+    const updatedIssue = await Issue.findByIdAndUpdate(
+      id,
+      { title, description, priority, status, assignees },
+      { new: true }
+    );
+
+    if (!updatedIssue) {
+      return res.status(404).json({ message: "Issue not found" });
+    }
+
+    await Activity.create({
+      user: userId,
+      type: "STATUS_CHANGE",
+      issue: id,
+      metaData: `Updated issue: ${title}`,
+    });
+
+    res.status(200).json({ message: "Issue updated successfully", updatedIssue });
+  } catch (error) {
+    res.status(500).json({ message: "Error updating issue", error: error.message });
+  }
+};
+
+export const deleteIssue = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const userId = req.user.id;
+
+    const issueToDelete = await Issue.findById(id);
+
+    if (!issueToDelete) {
+      return res.status(404).json({ message: "Issue not found" });
+    }
+
+    await Issue.findByIdAndDelete(id);
+
+    await Activity.create({
+      user: userId,
+      type: "DELETE",
+      issue: id,
+      metaData: `Deleted issue: ${issueToDelete.title}`,
+    });
+
+    res.status(200).json({ message: "Issue deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Error deleting issue", error: error.message });
+  }
+};

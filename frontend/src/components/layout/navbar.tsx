@@ -47,7 +47,7 @@ export default function Navbar({ onNewIssueClick, onMenuClick }: NavbarProps) {
           <Button
             variant="primary"
             icon={<Plus size={16} />}
-            onClick={onNewIssueClick || (() => console.log("Open Issue Modal"))}
+            onClick={onNewIssueClick}
           >
             <span className="hidden sm:inline">New Issue</span>
           </Button>

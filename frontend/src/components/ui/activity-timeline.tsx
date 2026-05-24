@@ -1,4 +1,10 @@
-import { CheckCircle, PlusCircle, RefreshCw, UserPlus } from "lucide-react";
+import {
+  CheckCircle,
+  PlusCircle,
+  RefreshCw,
+  Trash2,
+  UserPlus,
+} from "lucide-react";
 import { useGetRecentActivitiesQuery } from "../../store/api/activityApi";
 import { formatDistanceToNow } from "date-fns";
 
@@ -13,18 +19,27 @@ export default function ActivityTimeline() {
     CREATE: {
       icon: <PlusCircle size={14} />,
       color: "text-blue-600 bg-blue-50 border-blue-100",
+      label: "created",
     },
     STATUS_CHANGE: {
       icon: <RefreshCw size={14} />,
       color: "text-amber-600 bg-amber-50 border-amber-100",
+      label: "updated",
     },
     ASSIGN: {
       icon: <UserPlus size={14} />,
       color: "text-purple-600 bg-purple-50 border-purple-100",
+      label: "assigned",
     },
     RESOLVE: {
       icon: <CheckCircle size={14} />,
       color: "text-emerald-600 bg-emerald-50 border-emerald-100",
+      label: "resolved",
+    },
+    DELETE: {
+      icon: <Trash2 size={14} />,
+      color: "text-red-600 bg-red-50 border-red-100",
+      label: "deleted",
     },
   };
 
@@ -53,9 +68,9 @@ export default function ActivityTimeline() {
                   <span className="font-semibold text-black/90">
                     {act.user.firstName} {act.user.lastName}
                   </span>{" "}
-                  updated{" "}
+                  {config.label}{" "}
                   <span className="font-medium text-(--color-primary)">
-                    {act.issue.title}
+                    {act.issue?.title || "an issue"}
                   </span>
                 </p>
 

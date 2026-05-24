@@ -3,13 +3,14 @@ import Sidebar from "./sidebar";
 import Navbar from "./navbar";
 import { useState } from "react";
 import { useGetIssueStatsQuery } from "../../store/api/issueApi";
+import IssueModel from "../issue-modal";
 
 export default function AppLayout() {
-
   const { data: stats } = useGetIssueStatsQuery();
-  
+
   const totalIssuesCount = stats?.total ?? 0;
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isIssueModalOpen, setIsIssueModalOpen] = useState(false);
 
   return (
     <div className="flex min-h-screen bg-gray-50 relative">
@@ -35,14 +36,18 @@ export default function AppLayout() {
       <div className="flex flex-col flex-1 h-screen overflow-hidden w-full">
         <Navbar
           onMenuClick={() => setIsSidebarOpen(!isSidebarOpen)}
-          onNewIssueClick={() => console.log("Open Global New Issue Modal")}
-          onExportClick={() => console.log("Exporting to Excel...")}
+          onNewIssueClick={() => setIsIssueModalOpen(true)}
         />
 
         <main className="flex-1 p-4 overflow-y-auto">
           <Outlet />
         </main>
       </div>
+
+      <IssueModel
+        open={isIssueModalOpen}
+        onClose={() => setIsIssueModalOpen(false)}
+      />
     </div>
   );
 }
