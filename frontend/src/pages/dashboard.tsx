@@ -4,6 +4,7 @@ import IssueTable, { type TableIssue } from "../components/ui/issue-table";
 import Button from "../components/ui/button";
 import { Link } from "react-router-dom";
 import ActivityTimeline from "../components/ui/activity-timeline";
+import { useGetIssuesQuery } from "../store/api/issueApi";
 
 export default function Dashboard() {
   const stats = {
@@ -14,50 +15,27 @@ export default function Dashboard() {
     closed: 3,
   };
 
-  const allDummyIssues: TableIssue[] = [
-    {
-      id: "684fd91e2ab7c94a71f8b3c1",
-      title: "Payment gateway timeout",
-      priority: "Critical",
-      status: "In Progress",
-      assignees: [
-        { id: "685ac12f9de734af21b91e44", name: "Anura", initials: "AS" },
-        { id: "687be3c81fd49a6d12ce7721", name: "Kamal", initials: "KL" },
-        { id: "689fd2ab34ce91f7812ac993", name: "Malki", initials: "MK" },
-      ],
-    },
-    {
-      id: "681ac7e43df912ab67ef902d",
-      title: "Typo in footer text",
-      priority: "Critical",
-      status: "Closed",
-      assignees: [
-        { id: "687be3c81fd49a6d12ce7721", name: "Kamal", initials: "KL" },
-      ],
-    },
-    {
-      id: "68af21dc93be74f1a45ce812",
-      title: "Auth token expiration bug",
-      priority: "Critical",
-      status: "Open",
-      assignees: [
-        { id: "689fd2ab34ce91f7812ac993", name: "Malki", initials: "MK" },
-      ],
-    },
-    {
-      id: "67bc91fa24de81ab56cd77e4",
-      title: "Slow load time on images",
-      priority: "Critical",
-      status: "In Progress",
-      assignees: [
-        { id: "687be3c81fd49a6d12ce7721", name: "Kamal", initials: "KL" },
-      ],
-    },
-  ];
+  const { data } = useGetIssuesQuery({
+    page: 1,
+    limit: 4,
+    priority: "Critical", 
+  });
 
-  const criticalIssues = allDummyIssues.filter(
-    (issue) => issue.priority === "Critical",
-  );
+  const criticalIssues: TableIssue[] = 
+    data?.issues
+      .filter((issue) => issue.priority === "Critical") 
+      .map((issue) => ({
+        id: issue._id,
+        title: issue.title,
+        description: issue.description || "----",
+        priority: issue.priority,
+        status: issue.status,
+        assignees: issue.assignees.map((user) => ({
+          id: user._id,
+          name: `${user.firstName} ${user.lastName}`,
+          initials: user.initials,
+        })),
+      })) || [];
 
   return (
     <div className="space-y-6">

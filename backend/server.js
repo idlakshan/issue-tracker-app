@@ -3,6 +3,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import connectDB from './src/infrastructure/db.js';
 import authRoutes from './src/infrastructure/authRoutes.js';
+import issueRoutes from './src/infrastructure/issueRoutes.js';
 
 
 dotenv.config();
@@ -14,7 +15,7 @@ app.use(express.json());
 connectDB();
 
 app.use("/api/auth", authRoutes);
-
+app.use("/api/issues", issueRoutes);
 
 app.get('/api/test', (req, res) => {
   res.json({ message: "API Works!" });

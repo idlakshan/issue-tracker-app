@@ -7,6 +7,7 @@ export interface TableUser {
 export interface TableIssue {
   id: string;
   title: string;
+  description: string;
   priority: "Critical" | "High" | "Medium" | "Low";
   status: "Open" | "In Progress" | "Resolved" | "Closed";
   assignees: TableUser[];
@@ -17,6 +18,7 @@ interface IssueTableProps {
   showColumns?: {
     id?: boolean;
     title?: boolean;
+    description?: boolean;
     priority?: boolean;
     status?: boolean;
     assignees?: boolean;
@@ -30,6 +32,7 @@ export default function IssueTable({
   const columns = {
     id: showColumns.id ?? true,
     title: showColumns.title ?? true,
+    description: showColumns.description ?? true,
     priority: showColumns.priority ?? true,
     status: showColumns.status ?? true,
     assignees: showColumns.assignees ?? true,
@@ -54,8 +57,10 @@ export default function IssueTable({
       <table className="w-full text-left border-collapse">
         <thead>
           <tr className="border-b border-gray-100 text-xs text-gray-400 font-medium">
-            {columns.id && <th className="py-3 px-2">ID</th>}
-            {columns.title && <th className="py-3 px-2">Title</th>}
+            {(columns.id || columns.title) && (
+              <th className="py-3 px-2">Issue</th>
+            )}
+            {columns.description && <th className="py-3 px-2">Description</th>}
             {columns.priority && <th className="py-3 px-2">Priority</th>}
             {columns.status && <th className="py-3 px-2">Status</th>}
             {columns.assignees && (
@@ -79,18 +84,29 @@ export default function IssueTable({
                 key={issue.id}
                 className="hover:bg-gray-50/50 transition-colors"
               >
-                {columns.id && (
-                  <td className="py-3.5 px-2 font-medium text-gray-500 text-xs">
-                    {issue.id}
+                {(columns.id || columns.title) && (
+                  <td className="py-3.5 px-2">
+                    <div className="flex flex-col">
+                      {columns.id && (
+                        <span className="text-[12px] text-gray-400 font-mono">
+                          {issue.id}
+                        </span>
+                      )}
+                      {columns.title && (
+                        <span className="font-medium text-(--color-text) truncate max-w-72">
+                          {issue.title}
+                        </span>
+                      )}
+                    </div>
                   </td>
                 )}
 
-                {columns.title && (
+                {columns.description && (
                   <td
-                    className="py-3.5 px-2 font-medium text-(--color-text) max-w-60 truncate"
-                    title={issue.title}
+                    className="py-3.5 px-2 text-gray-500 max-w-48 truncate"
+                    title={issue.description}
                   >
-                    {issue.title}
+                    {issue.description}
                   </td>
                 )}
 

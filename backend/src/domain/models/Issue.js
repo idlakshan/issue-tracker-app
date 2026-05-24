@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 const IssueSchema = new mongoose.Schema(
   {
     title: { type: String, required: true, trim: true },
+    description: { type: String, default: "" },
     priority: {
       type: String,
       enum: ["Critical", "High", "Medium", "Low"],
