@@ -35,7 +35,7 @@ export default function AppLayout() {
           onExportClick={() => console.log("Exporting to Excel...")}
         />
 
-        <main className="flex-1 p-4 md:p-6 overflow-y-auto">
+        <main className="flex-1 p-4 overflow-y-auto">
           <Outlet />
         </main>
       </div>

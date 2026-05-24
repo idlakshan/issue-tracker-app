@@ -5,6 +5,7 @@ import { Dropdown } from "../components/ui/dropdown";
 import { useGetIssuesQuery } from "../store/api/issueApi";
 import type { Issue } from "../types/issue";
 import Input from "../components/ui/text-input";
+import Pagination from "../components/ui/pagination";
 
 export interface UserResponse {
   _id: string;
@@ -71,7 +72,9 @@ export default function AllIssues() {
             <Input
               placeholder="Search issues..."
               value={searchTerm}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchTerm(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setSearchTerm(e.target.value)
+              }
               icon={<Search size={16} />}
             />
           </div>
@@ -81,7 +84,9 @@ export default function AllIssues() {
               { value: "Open", label: "Open" },
             ]}
             value={statusFilter}
-            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setStatusFilter(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+              setStatusFilter(e.target.value)
+            }
           />
           <Dropdown
             options={[
@@ -89,12 +94,16 @@ export default function AllIssues() {
               { value: "High", label: "High" },
             ]}
             value={priorityFilter}
-            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setPriorityFilter(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+              setPriorityFilter(e.target.value)
+            }
           />
           <Dropdown
             options={[{ value: "ALL", label: "All Assignees" }]}
             value={assigneeFilter}
-            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setAssigneeFilter(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+              setAssigneeFilter(e.target.value)
+            }
           />
         </div>
       </div>
@@ -114,24 +123,16 @@ export default function AllIssues() {
           )}
         </div>
 
-        <div className="p-4 border-t border-secondary-text/10 flex justify-between items-center text-xs">
-          <span>
-            Page {currentPage} of {totalPages}
+        <div className="p-4 border-t border-secondary-text/10 flex justify-between items-center">
+          <span className="text-xs text-secondary-text">
+            Showing page {currentPage} of {totalPages}
           </span>
-          <div className="flex gap-2">
-            <button
-              disabled={currentPage === 1}
-              onClick={() => setCurrentPage((p) => p - 1)}
-            >
-              Prev
-            </button>
-            <button
-              disabled={currentPage === totalPages}
-              onClick={() => setCurrentPage((p) => p + 1)}
-            >
-              Next
-            </button>
-          </div>
+
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+          />
         </div>
       </div>
     </div>
