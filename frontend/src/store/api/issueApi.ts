@@ -48,46 +48,65 @@ export interface UpdateIssueRequest {
   assignees: string[];
 }
 
+export interface ActivityResponse {
+  _id: string;
+  user: { _id: string; firstName: string; lastName: string };
+  type: "CREATE" | "STATUS_CHANGE" | "ASSIGN" | "RESOLVE" | "DELETE";
+  issue: { _id: string; title: string };
+  createdAt: string;
+}
+
 export const issueApi = createApi({
   reducerPath: "issueApi",
   baseQuery: baseQueryWithReauth,
-  tagTypes: ["Issues", "Stats"],
+  tagTypes: ["Issues", "Stats", "Activities"],
+
   endpoints: (builder) => ({
     getIssues: builder.query<GetIssuesResponse, GetIssuesParams>({
       query: ({ page, limit, status, priority, assignee, search }) => {
         const params = new URLSearchParams();
+
         params.append("page", page.toString());
         params.append("limit", limit.toString());
 
         if (status && status !== "ALL") params.append("status", status);
         if (priority && priority !== "ALL") params.append("priority", priority);
-        if (assignee && assignee.length > 0) {
+
+        if (assignee?.length) {
           assignee.forEach((a) => params.append("assignee", a));
         }
-        if (search && search.trim()) params.append("search", search.trim());
+
+        if (search?.trim()) {
+          params.append("search", search.trim());
+        }
 
         return {
           url: `/issues?${params.toString()}`,
           method: "GET",
         };
       },
+
       providesTags: ["Issues"],
     }),
+
     createIssue: builder.mutation<CreateIssueResponse, CreateIssueRequest>({
       query: (body) => ({
         url: "/issues",
         method: "POST",
         body,
       }),
-      invalidatesTags: ["Issues", "Stats"],
+
+      invalidatesTags: ["Issues", "Stats", "Activities"],
     }),
+
     updateIssue: builder.mutation<CreateIssueResponse, UpdateIssueRequest>({
       query: ({ id, ...body }) => ({
         url: `/issues/${id}`,
         method: "PUT",
         body,
       }),
-      invalidatesTags: ["Issues", "Stats"],
+
+      invalidatesTags: ["Issues", "Stats", "Activities"],
     }),
 
     deleteIssue: builder.mutation<{ message: string }, string>({
@@ -95,15 +114,26 @@ export const issueApi = createApi({
         url: `/issues/${id}`,
         method: "DELETE",
       }),
-      invalidatesTags: ["Issues", "Stats"],
+
+      invalidatesTags: ["Issues", "Stats", "Activities"],
     }),
 
     getIssueStats: builder.query<IssueStats, void>({
       query: () => ({
         url: "/issues/stats",
         method: "GET",
-        providesTags: ["Stats"],
       }),
+
+      providesTags: ["Stats"],
+    }),
+
+    getRecentActivities: builder.query<ActivityResponse[], void>({
+      query: () => ({
+        url: "/activities",
+        method: "GET",
+      }),
+
+      providesTags: ["Activities"],
     }),
   }),
 });
@@ -114,4 +144,5 @@ export const {
   useCreateIssueMutation,
   useUpdateIssueMutation,
   useDeleteIssueMutation,
+  useGetRecentActivitiesQuery,
 } = issueApi;

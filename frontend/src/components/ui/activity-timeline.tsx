@@ -5,8 +5,9 @@ import {
   Trash2,
   UserPlus,
 } from "lucide-react";
-import { useGetRecentActivitiesQuery } from "../../store/api/activityApi";
+
 import { formatDistanceToNow } from "date-fns";
+import { useGetRecentActivitiesQuery } from "../../store/api/issueApi";
 
 export default function ActivityTimeline() {
   const { data: activities, isLoading } = useGetRecentActivitiesQuery();
