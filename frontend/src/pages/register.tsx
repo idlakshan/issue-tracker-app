@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import { ShieldHalf, Eye, EyeOff } from "lucide-react";
 import Button from "../components/ui/button";
-import Input from "../components/ui/Input";
-import PasswordStrengthBar from "../components/PasswordStrengthBar";
+import Input from "../components/ui/input";
+import PasswordStrengthBar from "../components/password-strength-bar";
 import { z } from "zod";
 import { getPasswordStrength } from "../utils/passwordStrength";
-import PasswordHint from "../components/PasswordHint";
+import PasswordHint from "../components/password-hint";
 import { useNavigate } from "react-router-dom";
+
 
 const registerSchema = z.object({
   firstName: z.string().min(2, "Enter at least 2 characters"),

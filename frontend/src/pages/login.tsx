@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { ShieldHalf, Mail, Lock, Eye, EyeOff } from "lucide-react";
 import Button from "../components/ui/button";
-import Input from "../components/ui/Input";
+import Input from "../components/ui/input";
 import { useNavigate } from "react-router-dom";
 import { z } from "zod";
 
@@ -61,7 +61,6 @@ export default function Login() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-bg px-4">
       <div className="w-full max-w-md bg-surface rounded-xl shadow-lg p-8">
-        {/* Logo */}
         <div className="flex items-center gap-2 mb-8">
           <div className="w-8 h-8 rounded-md bg-primary flex items-center justify-center text-primary-text">
             <ShieldHalf size={20} />
