@@ -1,15 +1,19 @@
 import { useState, useEffect } from "react";
-import { Search, Loader2 } from "lucide-react";
+import { Search, Loader2, Download } from "lucide-react";
 import IssueTable, { type TableIssue } from "../components/ui/issue-table";
 import { Dropdown } from "../components/ui/dropdown";
-import { useDeleteIssueMutation, useGetIssuesQuery } from "../store/api/issueApi";
+import {
+  useDeleteIssueMutation,
+  useGetIssuesQuery,
+} from "../store/api/issueApi";
 import type { Issue } from "../types/issue";
 import Input from "../components/ui/text-input";
 import Pagination from "../components/ui/pagination";
 import { useGetUsersQuery } from "../store/api/authApi";
 import IssueModel from "../components/issue-modal";
 import { toast } from "react-toastify";
-
+import Button from "../components/ui/button";
+import { exportIssuesToExcel } from "../utils/export-utils";
 
 const statusOptions = [
   { value: "ALL", label: "All Statuses" },
@@ -60,6 +64,8 @@ export default function AllIssues() {
     search: debouncedSearch,
   });
 
+  console.log("Fetched issues data:", data);
+
   const [deleteIssue] = useDeleteIssueMutation();
 
   const mapToTableIssue = (issue: Issue): TableIssue => ({
@@ -87,7 +93,7 @@ export default function AllIssues() {
     }
   };
 
-  const handleDelete = async(id: string) => {
+  const handleDelete = async (id: string) => {
     if (window.confirm("Are you sure you want to delete this issue?")) {
       try {
         await deleteIssue(id).unwrap();
@@ -96,6 +102,12 @@ export default function AllIssues() {
         console.error("Failed to delete the issue:", error);
         toast.error("Error deleting issue");
       }
+    }
+  };
+
+  const handleExportExcel = () => {
+    if (data?.issues) {
+      exportIssuesToExcel(data.issues, "Issues_Report.xlsx");
     }
   };
 
@@ -147,6 +159,14 @@ export default function AllIssues() {
               }
             />
           </div>
+          <Button
+            variant="secondary"
+            title="Export to Excel"
+            onClick={handleExportExcel}
+          >
+            <Download size={18} />
+            <span className="text-sm font-medium">Export</span>
+          </Button>
         </div>
       </div>
 

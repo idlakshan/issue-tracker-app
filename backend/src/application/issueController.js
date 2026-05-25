@@ -59,7 +59,7 @@ export const getIssues = async (req, res) => {
 
 
     const issues = await Issue.find(filter)
-      .populate("assignees", "name initials")
+      .populate("assignees", "firstName lastName initials email")
       .sort({ createdAt: -1 })
       .skip((pageNum - 1) * limitNum)
       .limit(limitNum);

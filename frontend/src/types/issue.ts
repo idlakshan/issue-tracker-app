@@ -5,10 +5,12 @@ export interface User {
   _id: string;
   firstName: string;
   lastName: string;
+  email: string;
   initials: string;
 }
 
 export interface Issue {
+  createdAt: string | number | Date;
   _id: string;
   title: string;
   description: string;
