@@ -2,12 +2,14 @@ import { useState, useEffect } from "react";
 import { Search, Loader2 } from "lucide-react";
 import IssueTable, { type TableIssue } from "../components/ui/issue-table";
 import { Dropdown } from "../components/ui/dropdown";
-import { useGetIssuesQuery } from "../store/api/issueApi";
+import { useDeleteIssueMutation, useGetIssuesQuery } from "../store/api/issueApi";
 import type { Issue } from "../types/issue";
 import Input from "../components/ui/text-input";
 import Pagination from "../components/ui/pagination";
 import { useGetUsersQuery } from "../store/api/authApi";
 import IssueModel from "../components/issue-modal";
+import { toast } from "react-toastify";
+
 
 const statusOptions = [
   { value: "ALL", label: "All Statuses" },
@@ -58,6 +60,8 @@ export default function AllIssues() {
     search: debouncedSearch,
   });
 
+  const [deleteIssue] = useDeleteIssueMutation();
+
   const mapToTableIssue = (issue: Issue): TableIssue => ({
     id: issue._id,
     title: issue.title,
@@ -83,8 +87,16 @@ export default function AllIssues() {
     }
   };
 
-  const handleDelete = (id: string) => {
-    console.log("Delete issue:", id);
+  const handleDelete = async(id: string) => {
+    if (window.confirm("Are you sure you want to delete this issue?")) {
+      try {
+        await deleteIssue(id).unwrap();
+        toast.success("Issue deleted successfully");
+      } catch (error) {
+        console.error("Failed to delete the issue:", error);
+        toast.error("Error deleting issue");
+      }
+    }
   };
 
   return (
