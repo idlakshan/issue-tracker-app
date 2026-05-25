@@ -1,4 +1,5 @@
 import { Edit2, Trash2 } from "lucide-react";
+import { AVATAR_COLORS } from "../../constants";
 
 export interface TableUser {
   id: string;
@@ -149,21 +150,19 @@ export default function IssueTable({
                     <div className="flex items-center justify-center -space-x-2">
                       {issue.assignees.length > 0 ? (
                         <>
-                          {issue.assignees.slice(0, 3).map((user, idx) => (
-                            <div
-                              key={user.id}
-                              title={user.name}
-                              className={`w-6 h-6 rounded-full flex items-center justify-center text-[9px] font-bold ring-2 ring-(--color-surface) text-white ${
-                                idx === 0
-                                  ? "bg-blue-600"
-                                  : idx === 1
-                                    ? "bg-purple-600"
-                                    : "bg-emerald-600"
-                              }`}
-                            >
-                              {user.initials}
-                            </div>
-                          ))}
+                          {issue.assignees.slice(0, 3).map((user, idx) => {
+                            const color =
+                              AVATAR_COLORS[idx % AVATAR_COLORS.length];
+                            return (
+                              <div
+                                key={user.id}
+                                title={user.name}
+                                className={`w-6 h-6 rounded-full flex items-center justify-center text-[9px] font-bold ring-2 ring-(--color-surface) ${color.bg} ${color.text}`}
+                              >
+                                {user.initials}
+                              </div>
+                            );
+                          })}
                           {issue.assignees.length > 3 && (
                             <div className="w-6 h-6 rounded-full bg-gray-100 text-gray-500 flex items-center justify-center text-[9px] font-bold ring-2 ring-(--color-surface)">
                               +{issue.assignees.length - 3}
@@ -172,10 +171,6 @@ export default function IssueTable({
                         </>
                       ) : (
                         <span className="text-xs text-gray-400">—</span>
-                      )}
-
-                      {columns.actions && (
-                        <th className="py-3 px-2 text-center">Actions</th>
                       )}
                     </div>
                   </td>

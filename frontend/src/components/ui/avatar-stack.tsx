@@ -1,25 +1,19 @@
+import { AVATAR_COLORS } from "../../constants";
 import { useGetUsersQuery } from "../../store/api/authApi";
 
 interface AvatarStackProps {
   maxVisible?: number;
 }
 
-const AVATAR_COLORS = [
-  { bg: "bg-blue-600", text: "text-white" },
-  { bg: "bg-purple-600", text: "text-white" },
-  { bg: "bg-red-500", text: "text-white" },
-  { bg: "bg-green-600", text: "text-white" },
-  { bg: "bg-orange-500", text: "text-white" },
-];
-
 export default function AvatarStack({ maxVisible = 5 }: AvatarStackProps) {
   const { data: users, isLoading } = useGetUsersQuery();
 
-  if (isLoading) return <div className="text-sm text-gray-400">Loading team...</div>;
+  if (isLoading)
+    return <div className="text-sm text-gray-400">Loading team...</div>;
 
-  // Optional chaining (?.) සහ නියමිත logic එක
   const visibleUsers = users?.slice(0, maxVisible) || [];
-  const extraCount = (users?.length || 0) > maxVisible ? (users?.length || 0) - maxVisible : 0;
+  const extraCount =
+    (users?.length || 0) > maxVisible ? (users?.length || 0) - maxVisible : 0;
 
   return (
     <div className="flex items-center gap-2">
