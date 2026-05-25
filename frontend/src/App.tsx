@@ -6,6 +6,7 @@ import AppLayout from "./components/layout/app-layout";
 import Dashboard from "./pages/dashboard";
 import AllIssues from "./pages/all-issues";
 import ProtectedLayout from "./components/layout/protected-layout";
+import AllAssignees from "./pages/all-assignees";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           <Route element={<AppLayout />}>
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/issues" element={<AllIssues />} />
+            <Route path="/assignees" element={<AllAssignees />} />
           </Route>
         </Route>
 
