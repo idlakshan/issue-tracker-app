@@ -10,6 +10,7 @@ import { useDispatch } from "react-redux";
 import { useRegisterUserMutation } from "../store/api/authApi";
 import { setCredentials } from "../store/slices/authSlice";
 import Input from "../components/ui/text-input";
+import { toast } from "react-toastify";
 
 const registerSchema = z.object({
   firstName: z.string().min(2, "Enter at least 2 characters"),
@@ -100,6 +101,10 @@ export default function Register() {
 
       setForm({ firstName: "", lastName: "", email: "", password: "" });
     } catch (err: unknown) {
+      const error = err as { data?: { message?: string } };
+      const errorMessage =
+        error?.data?.message || "Registration failed. Please try again.";
+      toast.error(errorMessage);
       console.error("Registration failed:", err);
     }
   };

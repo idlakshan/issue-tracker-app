@@ -7,6 +7,7 @@ import { z } from "zod";
 import { useDispatch } from "react-redux";
 import { useLoginUserMutation } from "../store/api/authApi";
 import { setCredentials } from "../store/slices/authSlice";
+import { toast } from "react-toastify";
 
 const loginSchema = z.object({
   email: z.string().email("Enter a valid email address"),
@@ -56,6 +57,7 @@ export default function Login() {
         fieldErrors[field] = err.message;
       });
       setErrors(fieldErrors);
+      toast.error("Please fill in all required fields correctly.");
       return;
     }
 
@@ -71,10 +73,15 @@ export default function Login() {
 
       navigate("/dashboard");
     } catch (err: unknown) {
+      const error = err as { data?: { message?: string } };
+      const errorMessage =
+        error?.data?.message || "Login failed. Please try again.";
+
+      toast.error(errorMessage);
       console.error("Login failed:", err);
     }
 
-    console.log("Validated Login Data:", result.data);
+    //console.log("Validated Login Data:", result.data);
   };
 
   return (
