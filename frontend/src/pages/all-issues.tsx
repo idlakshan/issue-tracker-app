@@ -14,6 +14,7 @@ import IssueModel from "../components/issue-modal";
 import { toast } from "react-toastify";
 import Button from "../components/ui/button";
 import { exportIssuesToExcel } from "../utils/export-utils";
+import { confirmDelete } from "../utils/alert-utils";
 
 const statusOptions = [
   { value: "ALL", label: "All Statuses" },
@@ -94,7 +95,9 @@ export default function AllIssues() {
   };
 
   const handleDelete = async (id: string) => {
-    if (window.confirm("Are you sure you want to delete this issue?")) {
+    const result = await confirmDelete("Delete this issue?");
+
+    if (result.isConfirmed) {
       try {
         await deleteIssue(id).unwrap();
         toast.success("Issue deleted successfully");
